@@ -1,8 +1,8 @@
 import "./styles.editor.scss";
 import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
-import { RichText, BlockControls, AlignmentToolbar } from "@wordpress/editor";
-import { Toolbar, DropdownMenu } from "@wordpress/components";
+import { RichText, BlockControls, AlignmentToolbar, InspectorControls } from "@wordpress/editor";
+import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
 
 registerBlockType("mytheme-blocks/richtextblock", {
 	title: __("RichText Block", "mytheme-blocks"),
@@ -44,6 +44,35 @@ registerBlockType("mytheme-blocks/richtextblock", {
 
 		return (
 			<>
+				<InspectorControls>
+					<PanelBody title={ __( 'Panel', 'mytheme-blocks' ) }>
+						<ToggleControl
+							label="On/Off"
+							onChange={ (v) => console.log( v ) }
+						/>
+						<ColorPicker
+							color="#f03"
+							onChangeComplete={ (v) => console.log( v ) }
+						/>
+					</PanelBody>
+					<PanelBody title={ __( 'Color pallet', 'mytheme-blocks' ) }>
+						<ColorPalette
+							colors={
+								[
+									{
+										color: '#f03'
+									},
+									{
+										color: 'blue'
+									}
+								]
+							}
+							onChange={
+								( value ) => console.log( value )
+							}
+						/>
+					</PanelBody>
+				</InspectorControls>
 				<BlockControls
 					controls={
 						[
