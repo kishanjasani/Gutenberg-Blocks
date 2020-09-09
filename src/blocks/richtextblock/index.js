@@ -22,6 +22,8 @@ registerBlockType("mytheme-blocks/richtextblock", {
 	attributes: {
 		content: {
 			type: 'string',
+			source: 'html',
+			selector: 'p'
 		}
 	},
 	edit: ({ className, attributes, setAttributes }) => {
@@ -44,7 +46,7 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		const { content } = attributes;
 
 		return <RichText.Content
-			tagName="div"
+			tagName="p"
 			value={ content }
 		/>;
 	}
