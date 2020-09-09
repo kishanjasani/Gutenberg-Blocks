@@ -1,7 +1,8 @@
 import "./styles.editor.scss";
 import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
-import { RichText } from "@wordpress/editor";
+import { RichText, BlockControls } from "@wordpress/editor";
+import { Toolbar, DropdownMenu } from "@wordpress/components";
 
 registerBlockType("mytheme-blocks/richtextblock", {
 	title: __("RichText Block", "mytheme-blocks"),
@@ -34,13 +35,91 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			setAttributes( { content } );
 		}
 
-		return <RichText
-			tagName="p"
-			className={ className }
-			onChange={ onChangeContent }
-			value={ content }
-			formattingControls={ [ 'bold' ] }
-		/>;
+		return (
+			<>
+				<BlockControls
+					controls={
+						[
+							[
+								{
+									icon: 'wordpress',
+									title: __( 'test', 'mytheme-blocks' ),
+									onClick: () => alert(true),
+									isActive: true
+								}
+							],
+							[
+								{
+									icon: 'wordpress',
+									title: __( 'test', 'mytheme-blocks' ),
+									onClick: () => alert(true),
+									isActive: false
+								}
+							]
+						]
+					}
+				>
+					<Toolbar
+						isCollapsed
+						controls={
+							[
+								[
+									{
+										icon: 'wordpress',
+										title: __( 'test', 'mytheme-blocks' ),
+										onClick: () => alert(true),
+										isActive: true
+									}
+								],
+								[
+									{
+										icon: 'wordpress',
+										title: __( 'test', 'mytheme-blocks' ),
+										onClick: () => alert(true),
+										isActive: false
+									}
+								]
+							]
+						}
+					/>
+					{ ( content && content.length > 0 ) &&
+					<Toolbar>
+						<DropdownMenu
+							icon="editor-table"
+							label={ __( 'test', 'mytheme-blocks' ) }
+							controls={
+								[
+									[
+										{
+											icon: 'wordpress',
+											title: __( 'test', 'mytheme-blocks' ),
+											onClick: () => alert(true),
+											isActive: true
+										}
+									],
+									[
+										{
+											icon: 'wordpress',
+											title: __( 'test', 'mytheme-blocks' ),
+											onClick: () => alert(true),
+											isActive: false
+										}
+									]
+								]
+							}
+						/>
+					</Toolbar>
+					}
+				</BlockControls>
+				<RichText
+					tagName="p"
+					className={ className }
+					onChange={ onChangeContent }
+					value={ content }
+					formattingControls={ [ 'bold' ] }
+				/>
+			</>
+		);
 	},
 	save: function( { attributes } ) {
 		const { content } = attributes;
