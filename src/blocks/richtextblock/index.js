@@ -1,7 +1,7 @@
 import "./styles.editor.scss";
 import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
-import { RichText, BlockControls } from "@wordpress/editor";
+import { RichText, BlockControls, AlignmentToolbar } from "@wordpress/editor";
 import { Toolbar, DropdownMenu } from "@wordpress/components";
 
 registerBlockType("mytheme-blocks/richtextblock", {
@@ -25,14 +25,21 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			type: 'string',
 			source: 'html',
 			selector: 'p'
+		},
+		alignment: {
+			type: 'string'
 		}
 	},
 	edit: ({ className, attributes, setAttributes }) => {
 
-		const { content } = attributes;
+		const { content, alignment } = attributes;
 
 		const onChangeContent = ( content ) => {
 			setAttributes( { content } );
+		}
+
+		const onChangeAlignment = ( alignment ) => {
+			setAttributes( { alignment } );
 		}
 
 		return (
@@ -46,14 +53,6 @@ registerBlockType("mytheme-blocks/richtextblock", {
 									title: __( 'test', 'mytheme-blocks' ),
 									onClick: () => alert(true),
 									isActive: true
-								}
-							],
-							[
-								{
-									icon: 'wordpress',
-									title: __( 'test', 'mytheme-blocks' ),
-									onClick: () => alert(true),
-									isActive: false
 								}
 							]
 						]
@@ -81,6 +80,10 @@ registerBlockType("mytheme-blocks/richtextblock", {
 								]
 							]
 						}
+					/>
+					<AlignmentToolbar
+						value={ alignment }
+						onChange={ onChangeAlignment }
 					/>
 					{ ( content && content.length > 0 ) &&
 					<Toolbar>
@@ -117,16 +120,18 @@ registerBlockType("mytheme-blocks/richtextblock", {
 					onChange={ onChangeContent }
 					value={ content }
 					formattingControls={ [ 'bold' ] }
+					style={ { textAlign: alignment } }
 				/>
 			</>
 		);
 	},
 	save: function( { attributes } ) {
-		const { content } = attributes;
+		const { content, alignment } = attributes;
 
 		return <RichText.Content
 			tagName="p"
 			value={ content }
+			style={ { textAlign: alignment } }
 		/>;
 	}
 });
