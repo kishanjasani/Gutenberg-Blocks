@@ -1,6 +1,6 @@
 import { Component } from '@wordpress/element';
 import { __ } from "@wordpress/i18n";
-import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings } from "@wordpress/editor";
+import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings, withColors } from "@wordpress/editor";
 import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
 
 class Edit extends Component {
@@ -30,6 +30,7 @@ class Edit extends Component {
 	}
 
 	render() {
+		console.log( this.props );
 		const { className, attributes } = this.props;
 		const { content, alignment, backgroundColor, textColor } = attributes;
 		return (
@@ -161,4 +162,4 @@ class Edit extends Component {
 	}
 }
 
-export default Edit;
+export default withColors( 'backgroundColor', 'textColor' )( Edit );
