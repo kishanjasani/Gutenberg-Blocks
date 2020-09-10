@@ -56,6 +56,10 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		},
 		customTextColor: {
 			type: 'string',
+		},
+		shadow: {
+			type: 'boolean',
+			default: false
 		}
 	},
 	edit: Edit,

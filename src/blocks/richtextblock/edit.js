@@ -2,6 +2,7 @@ import { Component } from '@wordpress/element';
 import { __ } from "@wordpress/i18n";
 import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings, withColors, ContrastChecker } from "@wordpress/editor";
 import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
+import classnames from "classnames";
 
 class Edit extends Component {
 
@@ -17,13 +18,17 @@ class Edit extends Component {
 		this.props.setAttributes( { alignment } );
 	}
 
-	onChange = ( alignment ) => {
-		this.props.setAttributes( { alignment } );
+	toggleShadow = ( shadow ) => {
+		this.props.setAttributes( { shadow: !this.props.attributes.shadow } );
 	}
 
 	render() {
 		const { className, attributes, setTextColor, setBackgroundColor, backgroundColor, textColor } = this.props;
-		const { content, alignment } = attributes;
+		const { content, alignment, shadow } = attributes;
+		const classes = classnames( className, {
+			'has-shadow': shadow
+		});
+
 		return (
 			<>
 				<InspectorControls>
@@ -84,6 +89,14 @@ class Edit extends Component {
 									title: __( 'test', 'mytheme-blocks' ),
 									onClick: () => alert(true),
 									isActive: true
+								}
+							],
+							[
+								{
+									icon: 'wordpress',
+									title: __( 'Shadow', 'mytheme-blocks' ),
+									onClick: this.toggleShadow,
+									isActive: shadow
 								}
 							]
 						]
@@ -147,7 +160,7 @@ class Edit extends Component {
 				</BlockControls>
 				<RichText
 					tagName="p"
-					className={ className }
+					className={ classes }
 					onChange={ this.onChangeContent }
 					value={ content }
 					formattingControls={ [ 'bold' ] }
