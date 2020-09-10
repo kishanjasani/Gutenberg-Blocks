@@ -1,6 +1,6 @@
 import { Component } from '@wordpress/element';
 import { __ } from "@wordpress/i18n";
-import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings, withColors } from "@wordpress/editor";
+import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings, withColors, ContrastChecker } from "@wordpress/editor";
 import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
 
 class Edit extends Component {
@@ -21,18 +21,10 @@ class Edit extends Component {
 		this.props.setAttributes( { alignment } );
 	}
 
-	onChangeBackgroundColor = ( backgroundColor ) => {
-		this.props.setAttributes( { backgroundColor } );
-	}
-
-	onChangeTextColor = ( textColor ) => {
-		this.props.setAttributes( { textColor } );
-	}
-
 	render() {
 		console.log( this.props );
-		const { className, attributes } = this.props;
-		const { content, alignment, backgroundColor, textColor } = attributes;
+		const { className, attributes, setTextColor, setBackgroundColor, backgroundColor, textColor } = this.props;
+		const { content, alignment } = attributes;
 		return (
 			<>
 				<InspectorControls>
@@ -42,17 +34,22 @@ class Edit extends Component {
 							[
 								{
 									value: backgroundColor,
-									onChange: this.onChangeBackgroundColor,
+									onChange: setBackgroundColor,
 									label: __( 'Background Color', 'mytheme-blocks' )
 								},
 								{
 									value: textColor,
-									onChange: this.onChangeTextColor,
+									onChange: setTextColor,
 									label: __( 'Text Color', 'mytheme-blocks' )
 								}
 							]
 						}
-					/>
+					>
+						<ContrastChecker
+							textColor={textColor.color}
+							backgroundColor={backgroundColor.color}
+						/>
+					</PanelColorSettings>
 					<PanelBody title={ __( 'Panel', 'mytheme-blocks' ) }>
 						<ToggleControl
 							label="On/Off"
@@ -75,7 +72,7 @@ class Edit extends Component {
 									}
 								]
 							}
-							onChange={ this.onChangeBackgroundColor }
+							onChange={ setBackgroundColor }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -155,11 +152,11 @@ class Edit extends Component {
 					onChange={ this.onChangeContent }
 					value={ content }
 					formattingControls={ [ 'bold' ] }
-					style={ { textAlign: alignment, backgroundColor: backgroundColor, color:textColor } }
+					style={ { textAlign: alignment, backgroundColor: backgroundColor.color, color:textColor.color } }
 				/>
 			</>
 		);
 	}
 }
 
-export default withColors( 'backgroundColor', 'textColor' )( Edit );
+export default withColors( 'backgroundColor', { 'textColor': 'color' } )( Edit );

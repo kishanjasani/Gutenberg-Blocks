@@ -50,6 +50,12 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		},
 		textColor: {
 			type: 'string',
+		},
+		customBackgroundColor: {
+			type: 'string',
+		},
+		customTextColor: {
+			type: 'string',
 		}
 	},
 	edit: Edit,
