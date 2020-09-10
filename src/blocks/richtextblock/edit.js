@@ -14,8 +14,8 @@ class Edit extends Component {
 		this.props.setAttributes( { content } );
 	}
 
-	onChangeAlignment = ( alignment ) => {
-		this.props.setAttributes( { alignment } );
+	onChangeAlignment = ( textAlignment ) => {
+		this.props.setAttributes( { textAlignment } );
 	}
 
 	toggleShadow = () => {
@@ -28,7 +28,7 @@ class Edit extends Component {
 
 	render() {
 		const { className, attributes, setTextColor, setBackgroundColor, backgroundColor, textColor } = this.props;
-		const { content, alignment, shadow, shadowOpacity } = attributes;
+		const { content, textAlignment, shadow, shadowOpacity } = attributes;
 		const classes = classnames( className, {
 			'has-shadow': shadow,
 			[`shadow-opacity-${ shadowOpacity * 100 }`]: shadowOpacity
@@ -143,7 +143,7 @@ class Edit extends Component {
 						}
 					/>
 					<AlignmentToolbar
-						value={ alignment }
+						value={ textAlignment }
 						onChange={ this.onChangeAlignment }
 					/>
 					{ ( content && content.length > 0 ) &&
@@ -181,7 +181,7 @@ class Edit extends Component {
 					onChange={ this.onChangeContent }
 					value={ content }
 					formattingControls={ [ 'bold' ] }
-					style={ { textAlign: alignment, backgroundColor: backgroundColor.color, color:textColor.color } }
+					style={ { textAlign: textAlignment, backgroundColor: backgroundColor.color, color:textColor.color } }
 				/>
 			</>
 		);

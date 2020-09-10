@@ -3,6 +3,7 @@ import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 import { RichText, getColorClassName } from "@wordpress/editor";
 import classnames from "classnames";
+import { omit } from "lodash";
 import Edit from "./edit";
 
 const attributes = {
@@ -11,7 +12,7 @@ const attributes = {
 		source: 'html',
 		selector: 'h4'
 	},
-	alignment: {
+	textAlignment: {
 		type: 'string',
 	},
 	backgroundColor: {
@@ -70,13 +71,55 @@ registerBlockType("mytheme-blocks/richtextblock", {
 	attributes,
 	deprecated: [
 		{
-			attributes: {
+			attributes: omit({
+				...attributes
+			}, [ 'textAlignment' ]),
+			migrate: ( attributes ) => {
+				return omit({
+					...attributes,
+					textAlignment: attributes.alignment
+				}, [ 'alignment' ] )
+			},
+			save: function( { attributes } ) {
+
+				const { content, alignment, backgroundColor, textColor, customBackgroundColor, customTextColor, shadow, shadowOpacity } = attributes;
+
+				const backgroundClass = getColorClassName( 'background-color', backgroundColor );
+				const textClass = getColorClassName( 'color', textColor );
+
+				let classes = classnames({
+					[backgroundClass]: backgroundClass,
+					[textClass]: textClass,
+					'has-shadow': shadow,
+					[`shadow-opacity-${ shadowOpacity * 100 }`]: shadowOpacity
+				});
+
+				return <RichText.Content
+					tagName="p"
+					className={ classes }
+					value={ content }
+					style={ {
+						textAlign: alignment,
+						backgroundColor: backgroundClass ? undefined : customBackgroundColor,
+						color:textClass ? undefined : customTextColor
+					} }
+				/>;
+			}
+		},
+		{
+			attributes: omit({
 				...attributes,
 				content: {
 					type: 'string',
 					source: 'html',
 					selector: 'p'
 				}
+			}, [ 'textAlignment' ]),
+			migrate: ( attributes ) => {
+				return omit({
+					...attributes,
+					textAlignment: attributes.alignment
+				}, [ 'alignment' ] )
 			},
 			save: function( { attributes } ) {
 
@@ -108,7 +151,7 @@ registerBlockType("mytheme-blocks/richtextblock", {
 	edit: Edit,
 	save: function( { attributes } ) {
 
-		const { content, alignment, backgroundColor, textColor, customBackgroundColor, customTextColor, shadow, shadowOpacity } = attributes;
+		const { content, textAlignment, backgroundColor, textColor, customBackgroundColor, customTextColor, shadow, shadowOpacity } = attributes;
 
 		const backgroundClass = getColorClassName( 'background-color', backgroundColor );
 		const textClass = getColorClassName( 'color', textColor );
@@ -125,7 +168,7 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			className={ classes }
 			value={ content }
 			style={ {
-				textAlign: alignment,
+				textAlign: textAlignment,
 				backgroundColor: backgroundClass ? undefined : customBackgroundColor,
 				color:textClass ? undefined : customTextColor
 			} }
