@@ -3,6 +3,7 @@ import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings } from "@wordpress/editor";
 import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
+import Edit from './edit';
 
 registerBlockType("mytheme-blocks/richtextblock", {
 	title: __("RichText Block", "mytheme-blocks"),
@@ -51,7 +52,8 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			type: 'string',
 		}
 	},
-	edit: ({ className, attributes, setAttributes }) => {
+	edit: Edit,
+	edit2: ({ className, attributes, setAttributes }) => {
 
 		const { content, alignment, backgroundColor, textColor } = attributes;
 
