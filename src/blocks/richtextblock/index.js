@@ -60,12 +60,16 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		shadow: {
 			type: 'boolean',
 			default: false
+		},
+		shadowOpacity: {
+			type: 'number',
+			default: 0.3
 		}
 	},
 	edit: Edit,
 	save: function( { attributes } ) {
 
-		const { content, alignment, backgroundColor, textColor, customBackgroundColor, customTextColor } = attributes;
+		const { content, alignment, backgroundColor, textColor, customBackgroundColor, customTextColor, shadow, shadowOpacity } = attributes;
 
 		const backgroundClass = getColorClassName( 'background-color', backgroundColor );
 		const textClass = getColorClassName( 'color', textColor );
@@ -73,6 +77,8 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		let classes = classnames({
 			[backgroundClass]: backgroundClass,
 			[textClass]: textClass,
+			'has-shadow': shadow,
+			[`shadow-opacity-${ shadowOpacity * 100 }`]: shadowOpacity
 		});
 
 		return <RichText.Content

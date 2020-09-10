@@ -1,7 +1,7 @@
 import { Component } from '@wordpress/element';
 import { __ } from "@wordpress/i18n";
 import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings, withColors, ContrastChecker } from "@wordpress/editor";
-import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
+import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette, RangeControl } from "@wordpress/components";
 import classnames from "classnames";
 
 class Edit extends Component {
@@ -18,20 +18,37 @@ class Edit extends Component {
 		this.props.setAttributes( { alignment } );
 	}
 
-	toggleShadow = ( shadow ) => {
+	toggleShadow = () => {
 		this.props.setAttributes( { shadow: !this.props.attributes.shadow } );
+	}
+
+	onChangeShadowOpacity = ( shadowOpacity ) => {
+		this.props.setAttributes( { shadowOpacity } );
 	}
 
 	render() {
 		const { className, attributes, setTextColor, setBackgroundColor, backgroundColor, textColor } = this.props;
-		const { content, alignment, shadow } = attributes;
+		const { content, alignment, shadow, shadowOpacity } = attributes;
 		const classes = classnames( className, {
-			'has-shadow': shadow
+			'has-shadow': shadow,
+			[`shadow-opacity-${ shadowOpacity * 100 }`]: shadowOpacity
 		});
 
 		return (
 			<>
 				<InspectorControls>
+					{ ( shadow ) &&
+						<PanelBody title={ __( 'Setting', 'mytheme-blocks' ) }>
+							<RangeControl
+								label={ __( 'Shadow Opacity', 'mytheme-blcoks' ) }
+								value={ shadowOpacity }
+								onChange={ this.onChangeShadowOpacity }
+								min={ 0.1 }
+								max={ 0.4 }
+								step={ 0.1 }
+							/>
+						</PanelBody>
+					}
 					<PanelColorSettings
 						title={ __( 'PanelColorSettings', 'mytheme-blocks' ) }
 						colorSettings={
