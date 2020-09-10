@@ -5,6 +5,37 @@ import { RichText, getColorClassName } from "@wordpress/editor";
 import classnames from "classnames";
 import Edit from "./edit";
 
+const attributes = {
+	content: {
+		type: 'string',
+		source: 'html',
+		selector: 'h4'
+	},
+	alignment: {
+		type: 'string',
+	},
+	backgroundColor: {
+		type: 'string',
+	},
+	textColor: {
+		type: 'string',
+	},
+	customBackgroundColor: {
+		type: 'string',
+	},
+	customTextColor: {
+		type: 'string',
+	},
+	shadow: {
+		type: 'boolean',
+		default: false
+	},
+	shadowOpacity: {
+		type: 'number',
+		default: 0.3
+	}
+}
+
 registerBlockType("mytheme-blocks/richtextblock", {
 	title: __("RichText Block", "mytheme-blocks"),
 	description: __("Our second block", "mytheme-blocks"),
@@ -36,36 +67,44 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			label: __( 'Squered', 'mytheme-blocks' ),
 		},
 	],
-	attributes: {
-		content: {
-			type: 'string',
-			source: 'html',
-			selector: 'p'
-		},
-		alignment: {
-			type: 'string',
-		},
-		backgroundColor: {
-			type: 'string',
-		},
-		textColor: {
-			type: 'string',
-		},
-		customBackgroundColor: {
-			type: 'string',
-		},
-		customTextColor: {
-			type: 'string',
-		},
-		shadow: {
-			type: 'boolean',
-			default: false
-		},
-		shadowOpacity: {
-			type: 'number',
-			default: 0.3
+	attributes,
+	deprecated: [
+		{
+			attributes: {
+				...attributes,
+				content: {
+					type: 'string',
+					source: 'html',
+					selector: 'p'
+				}
+			},
+			save: function( { attributes } ) {
+
+				const { content, alignment, backgroundColor, textColor, customBackgroundColor, customTextColor, shadow, shadowOpacity } = attributes;
+
+				const backgroundClass = getColorClassName( 'background-color', backgroundColor );
+				const textClass = getColorClassName( 'color', textColor );
+
+				let classes = classnames({
+					[backgroundClass]: backgroundClass,
+					[textClass]: textClass,
+					'has-shadow': shadow,
+					[`shadow-opacity-${ shadowOpacity * 100 }`]: shadowOpacity
+				});
+
+				return <RichText.Content
+					tagName="p"
+					className={ classes }
+					value={ content }
+					style={ {
+						textAlign: alignment,
+						backgroundColor: backgroundClass ? undefined : customBackgroundColor,
+						color:textClass ? undefined : customTextColor
+					} }
+				/>;
+			}
 		}
-	},
+	],
 	edit: Edit,
 	save: function( { attributes } ) {
 
@@ -82,7 +121,7 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		});
 
 		return <RichText.Content
-			tagName="p"
+			tagName="h4"
 			className={ classes }
 			value={ content }
 			style={ {
