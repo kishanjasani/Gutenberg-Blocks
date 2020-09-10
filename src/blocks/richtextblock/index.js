@@ -1,9 +1,9 @@
 import "./styles.editor.scss";
-import { registerBlockType } from "@wordpress/blocks";
+import { registerBlockType, createBlock } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 import { RichText, getColorClassName } from "@wordpress/editor";
 import classnames from "classnames";
-import { omit } from "lodash";
+import { omit, create } from "lodash";
 import Edit from "./edit";
 
 const attributes = {
@@ -148,6 +148,30 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			}
 		}
 	],
+	transforms: {
+		from: [
+			{
+				type: 'block',
+				blocks: [ 'core/paragraph' ],
+				transform: ( { content, align } ) => {
+					return createBlock( 'mytheme-blocks/richtextblock', {
+						content: content,
+						textAlignment: align
+					} )
+				}
+			},
+			{
+				type: 'prefix',
+				prefix: "#",
+				transform: () => {
+					return createBlock( 'mytheme-blocks/richtextblock' );
+				}
+			}
+		],
+		to: [
+
+		]
+	},
 	edit: Edit,
 	save: function( { attributes } ) {
 
