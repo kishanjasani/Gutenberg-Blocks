@@ -1,7 +1,7 @@
 import "./styles.editor.scss";
 import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
-import { RichText, BlockControls, AlignmentToolbar, InspectorControls } from "@wordpress/editor";
+import { RichText, BlockControls, AlignmentToolbar, InspectorControls, PanelColorSettings } from "@wordpress/editor";
 import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPalette } from "@wordpress/components";
 
 registerBlockType("mytheme-blocks/richtextblock", {
@@ -20,6 +20,21 @@ registerBlockType("mytheme-blocks/richtextblock", {
 		</svg>
 	),
 	keywords: [__("photo", "mytheme-blocks"), __("image", "mytheme-blocks")],
+	styles: [
+		{
+			name: 'rounded',
+			label: __( 'Rounded', 'mytheme-blocks' ),
+			isDefault: true
+		},
+		{
+			name: 'outline',
+			label: __( 'Outline', 'mytheme-blocks' ),
+		},
+		{
+			name: 'squered',
+			label: __( 'Squered', 'mytheme-blocks' ),
+		},
+	],
 	attributes: {
 		content: {
 			type: 'string',
@@ -27,12 +42,18 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			selector: 'p'
 		},
 		alignment: {
-			type: 'string'
+			type: 'string',
+		},
+		backgroundColor: {
+			type: 'string',
+		},
+		textColor: {
+			type: 'string',
 		}
 	},
 	edit: ({ className, attributes, setAttributes }) => {
 
-		const { content, alignment } = attributes;
+		const { content, alignment, backgroundColor, textColor } = attributes;
 
 		const onChangeContent = ( content ) => {
 			setAttributes( { content } );
@@ -42,9 +63,38 @@ registerBlockType("mytheme-blocks/richtextblock", {
 			setAttributes( { alignment } );
 		}
 
+		const onChange = ( alignment ) => {
+			setAttributes( { alignment } );
+		}
+
+		const onChangeBackgroundColor = ( backgroundColor ) => {
+			setAttributes( { backgroundColor } );
+		}
+
+		const onChangeTextColor = ( textColor ) => {
+			setAttributes( { textColor } );
+		}
+
 		return (
 			<>
 				<InspectorControls>
+					<PanelColorSettings
+						title={ __( 'PanelColorSettings', 'mytheme-blocks' ) }
+						colorSettings={
+							[
+								{
+									value: backgroundColor,
+									onChange: onChangeBackgroundColor,
+									label: __( 'Background Color', 'mytheme-blocks' )
+								},
+								{
+									value: textColor,
+									onChange: onChangeTextColor,
+									label: __( 'Text Color', 'mytheme-blocks' )
+								}
+							]
+						}
+					/>
 					<PanelBody title={ __( 'Panel', 'mytheme-blocks' ) }>
 						<ToggleControl
 							label="On/Off"
@@ -67,9 +117,7 @@ registerBlockType("mytheme-blocks/richtextblock", {
 									}
 								]
 							}
-							onChange={
-								( value ) => console.log( value )
-							}
+							onChange={ onChangeBackgroundColor }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -149,18 +197,18 @@ registerBlockType("mytheme-blocks/richtextblock", {
 					onChange={ onChangeContent }
 					value={ content }
 					formattingControls={ [ 'bold' ] }
-					style={ { textAlign: alignment } }
+					style={ { textAlign: alignment, backgroundColor: backgroundColor, color:textColor } }
 				/>
 			</>
 		);
 	},
 	save: function( { attributes } ) {
-		const { content, alignment } = attributes;
+		const { content, alignment, backgroundColor, textColor } = attributes;
 
 		return <RichText.Content
 			tagName="p"
 			value={ content }
-			style={ { textAlign: alignment } }
+			style={ { textAlign: alignment, backgroundColor: backgroundColor, color:textColor } }
 		/>;
 	}
 });

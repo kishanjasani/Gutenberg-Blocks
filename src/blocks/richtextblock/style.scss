@@ -3,4 +3,13 @@
 	color: #fff;
 	border-radius: 5px;
 	padding: 20px;
+
+	&.is-style-outline {
+		border-radius: 0;
+		border: 2px solid currentColor;
+	}
+
+	&.is-style-squered {
+		border-radius: 0;
+	}
 }
