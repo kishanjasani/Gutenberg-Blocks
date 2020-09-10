@@ -11,6 +11,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
+function mytheme_blocks_custom_categories( $categories, $post ) {
+	return array_merge(
+		$categories,
+		[
+			[
+				'slug'  => 'mytheme-category',
+				'title' => __( 'My Theme Category', 'mytheme-blocks' ),
+				'icon'  => 'wordpress',
+			],
+		]
+	);
+}
+add_filter( 'block_categories', 'mytheme_blocks_custom_categories', 10, 2 );
+
 function mytheme_blocks_register_block_type( $block, $options = array() ) {
 	register_block_type(
 		'mytheme-blocks/' . $block,

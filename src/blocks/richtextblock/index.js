@@ -7,7 +7,7 @@ import { Toolbar, DropdownMenu, PanelBody, ToggleControl, ColorPicker, ColorPale
 registerBlockType("mytheme-blocks/richtextblock", {
 	title: __("RichText Block", "mytheme-blocks"),
 	description: __("Our second block", "mytheme-blocks"),
-	category: "layout",
+	category: "mytheme-category",
 	icon: (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
