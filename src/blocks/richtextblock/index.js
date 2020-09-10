@@ -1,9 +1,9 @@
 import "./styles.editor.scss";
 import { registerBlockType } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
-import { RichText } from "@wordpress/editor";
-
-import Edit from './edit';
+import { RichText, getColorClassName } from "@wordpress/editor";
+import classnames from "classnames";
+import Edit from "./edit";
 
 registerBlockType("mytheme-blocks/richtextblock", {
 	title: __("RichText Block", "mytheme-blocks"),
@@ -60,12 +60,26 @@ registerBlockType("mytheme-blocks/richtextblock", {
 	},
 	edit: Edit,
 	save: function( { attributes } ) {
-		const { content, alignment, backgroundColor, textColor } = attributes;
+
+		const { content, alignment, backgroundColor, textColor, customBackgroundColor, customTextColor } = attributes;
+
+		const backgroundClass = getColorClassName( 'background-color', backgroundColor );
+		const textClass = getColorClassName( 'color', textColor );
+
+		let classes = classnames({
+			[backgroundClass]: backgroundClass,
+			[textClass]: textClass,
+		});
 
 		return <RichText.Content
 			tagName="p"
+			className={ classes }
 			value={ content }
-			style={ { textAlign: alignment, backgroundColor: backgroundColor, color:textColor } }
+			style={ {
+				textAlign: alignment,
+				backgroundColor: backgroundClass ? undefined : customBackgroundColor,
+				color:textClass ? undefined : customTextColor
+			} }
 		/>;
 	}
 });

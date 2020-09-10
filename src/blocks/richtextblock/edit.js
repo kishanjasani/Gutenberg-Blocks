@@ -22,7 +22,6 @@ class Edit extends Component {
 	}
 
 	render() {
-		console.log( this.props );
 		const { className, attributes, setTextColor, setBackgroundColor, backgroundColor, textColor } = this.props;
 		const { content, alignment } = attributes;
 		return (
